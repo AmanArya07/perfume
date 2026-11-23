@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maison Élara | Find Your Signature Scent</title>
+  <meta name="description" content="Take our 5-question scent quiz and discover the perfume made for you.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+/* ============ THEME ============ */
+:root {
+  --bg: #0b0a09;
+  --bg-2: #14120f;
+  --card: #1a1713;
+  --gold: #c9a96e;
+  --gold-light: #e8d3a2;
+  --cream: #f3ead8;
+  --muted: #a39b8b;
+  --line: rgba(201, 169, 110, 0.22);
+  --serif: 'Cormorant Garamond', Georgia, serif;
+  --sans: 'Montserrat', system-ui, sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 70px; }
+body {
+  background: var(--bg);
+  color: var(--cream);
+  font-family: var(--sans);
+  font-weight: 300;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; }
+
+/* ============ NAVBAR ============ */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 18px 5vw;
+  transition: background .4s, padding .4s, border-color .4s;
+  border-bottom: 1px solid transparent;
+}
+.nav.scrolled {
+  background: rgba(11, 10, 9, .88);
+  backdrop-filter: blur(12px);
+  padding: 12px 5vw;
+  border-color: var(--line);
+}
+.logo { font-family: var(--serif); font-size: 1.5rem; letter-spacing: .25em; font-weight: 500; }
+.logo span { color: var(--gold); }
+.nav-links { display: flex; gap: 2.2rem; align-items: center; font-size: .78rem; letter-spacing: .18em; text-transform: uppercase; }
+.nav-links a { position: relative; transition: color .3s; }
+.nav-links a:not(.nav-cta):hover { color: var(--gold); }
+.nav-cta { border: 1px solid var(--gold); padding: 9px 20px; color: var(--gold); transition: .3s; }
+.nav-cta:hover { background: var(--gold); color: var(--bg); }
+
+.menu-btn { display: none; background: none; border: 0; width: 32px; height: 24px; position: relative; }
+.menu-btn span { position: absolute; left: 0; width: 100%; height: 1.5px; background: var(--gold); transition: .3s; }
+.menu-btn span:nth-child(1) { top: 3px; }
+.menu-btn span:nth-child(2) { top: 11px; }
+.menu-btn span:nth-child(3) { top: 19px; }
+.menu-btn.open span:nth-child(1) { top: 11px; transform: rotate(45deg); }
+.menu-btn.open span:nth-child(2) { opacity: 0; }
+.menu-btn.open span:nth-child(3) { top: 11px; transform: rotate(-45deg); }
+
+/* ============ BUTTONS ============ */
+.btn {
+  display: inline-block; padding: 15px 34px;
+  font-size: .75rem; letter-spacing: .2em; text-transform: uppercase; font-weight: 500;
+  border: 1px solid var(--gold); transition: .35s; background: transparent; color: var(--gold);
+}
+.btn-gold { background: linear-gradient(135deg, #d9bd84, #b8914f); color: #1a1409; border-color: transparent; }
+.btn-gold:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(201, 169, 110, .3); }
+.btn-ghost:hover { background: var(--gold); color: var(--bg); }
+
+/* ============ HERO ============ */
+.hero {
+  min-height: 100vh; position: relative;
+  display: grid; grid-template-columns: 1.05fr 1fr; align-items: center; gap: 2rem;
+  padding: 120px 5vw 60px;
+  background: radial-gradient(ellipse at 75% 40%, #2a2117 0%, var(--bg) 62%);
+}
+.hero-glow {
+  position: absolute; width: 520px; height: 520px; right: 8%; top: 20%;
+  background: radial-gradient(circle, rgba(201, 169, 110, .18), transparent 65%);
+  filter: blur(30px); animation: pulse 6s ease-in-out infinite; pointer-events: none;
+}
+@keyframes pulse { 0%, 100% { opacity: .6; transform: scale(1); } 50% { opacity: 1; transform: scale(1.1); } }
+
+.eyebrow { font-size: .72rem; letter-spacing: .35em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.2rem; }
+.hero h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(2.6rem, 6vw, 5.2rem); line-height: 1.08; margin-bottom: 1.5rem; }
+.hero h1 em { color: var(--gold-light); font-style: italic; }
+.lead { max-width: 500px; color: var(--muted); font-size: 1rem; margin-bottom: 2.2rem; }
+.hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 3rem; }
+.hero-stats { display: flex; gap: 2.5rem; list-style: none; flex-wrap: wrap; }
+.hero-stats li { display: flex; flex-direction: column; }
+.hero-stats strong { font-family: var(--serif); font-size: 2rem; color: var(--gold); font-weight: 500; line-height: 1.1; }
+.hero-stats span { font-size: .7rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+
+.hero-visual { position: relative; height: 560px; display: flex; justify-content: center; align-items: flex-end; }
+.hero-bottle { position: absolute; filter: drop-shadow(0 25px 35px rgba(0, 0, 0, .6)); }
+.hero-bottle svg { width: 100%; height: auto; display: block; }
+.hero-bottle.main { width: 290px; bottom: 40px; z-index: 3; animation: float 6s ease-in-out infinite; }
+.hero-bottle.side { width: 190px; bottom: 40px; z-index: 2; opacity: .85; }
+.hero-bottle.left { left: 4%; animation: float 7s ease-in-out infinite .6s; }
+.hero-bottle.right { right: 4%; animation: float 8s ease-in-out infinite 1.2s; }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-16px); } }
+.pedestal {
+  position: absolute; bottom: 20px; width: 80%; height: 34px; border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(201, 169, 110, .45), transparent 70%);
+}
+
+/* ============ MARQUEE ============ */
+.marquee { overflow: hidden; border-block: 1px solid var(--line); background: var(--bg-2); padding: 16px 0; }
+.marquee-track { display: flex; gap: 2.5rem; width: max-content; animation: scroll 28s linear infinite; }
+.marquee-track span { font-family: var(--serif); font-size: 1.5rem; letter-spacing: .25em; text-transform: uppercase; color: var(--gold); white-space: nowrap; }
+@keyframes scroll { to { transform: translateX(-50%); } }
+
+/* ============ SECTIONS ============ */
+.section { padding: 100px 5vw; }
+.section-head { text-align: center; margin-bottom: 3.5rem; }
+.section-head h2 { font-family: var(--serif); font-weight: 400; font-size: clamp(2rem, 4.5vw, 3.4rem); line-height: 1.15; }
+
+/* Scroll reveal */
+.reveal { opacity: 0; transform: translateY(30px); transition: opacity .9s ease, transform .9s ease; }
+.reveal.show { opacity: 1; transform: none; }
+
+/* ============ PRODUCT GRID ============ */
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; max-width: 1200px; margin: 0 auto; }
+.product {
+  background: linear-gradient(180deg, var(--card), #120f0c);
+  border: 1px solid var(--line); padding: 34px 26px 30px; text-align: center;
+  transition: transform .5s, border-color .5s, box-shadow .5s;
+}
+.product:hover { transform: translateY(-10px); border-color: var(--gold); box-shadow: 0 25px 50px rgba(0, 0, 0, .5); }
+.product .bottle-wrap { height: 250px; display: flex; justify-content: center; align-items: center; margin-bottom: 18px; }
+.product .bottle-wrap svg { height: 100%; width: auto; transition: transform .6s; filter: drop-shadow(0 14px 18px rgba(0, 0, 0, .5)); }
+.product:hover .bottle-wrap svg { transform: scale(1.07) rotate(-2deg); }
+.product .tag { font-size: .65rem; letter-spacing: .3em; text-transform: uppercase; color: var(--gold); }
+.product h3 { font-family: var(--serif); font-weight: 500; font-size: 1.7rem; margin: 6px 0; }
+.product .notes-line { font-size: .82rem; color: var(--muted); margin-bottom: 12px; }
+.product .price { font-family: var(--serif); font-size: 1.3rem; color: var(--gold-light); }
+
+/* ============ HOW IT WORKS ============ */
+.how { background: var(--bg-2); border-block: 1px solid var(--line); }
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; max-width: 1000px; margin: 0 auto; }
+.step { text-align: center; padding: 10px 20px; }
+.step .num { font-family: var(--serif); font-size: 3.6rem; color: transparent; -webkit-text-stroke: 1px var(--gold); }
+.step h3 { font-family: var(--serif); font-size: 1.7rem; font-weight: 500; margin: 6px 0 8px; }
+.step p { color: var(--muted); font-size: .92rem; }
+
+/* ============ QUIZ ============ */
+.quiz-section { background: radial-gradient(ellipse at 50% 0%, #241c13, var(--bg) 70%); }
+.quiz-card {
+  max-width: 820px; margin: 0 auto; min-height: 440px;
+  border: 1px solid var(--line); background: rgba(26, 23, 19, .7); backdrop-filter: blur(6px);
+  padding: 50px 44px; position: relative;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, .5);
+}
+.quiz-card::before, .quiz-card::after {
+  content: ''; position: absolute; width: 38px; height: 38px; border: 1px solid var(--gold);
+}
+.quiz-card::before { top: 12px; left: 12px; border-right: 0; border-bottom: 0; }
+.quiz-card::after { bottom: 12px; right: 12px; border-left: 0; border-top: 0; }
+
+.quiz-screen { display: none; animation: fadeUp .6s ease; }
+.quiz-screen.active { display: block; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+
+#introScreen { text-align: center; padding: 30px 0; }
+.intro-icon { font-size: 2.6rem; color: var(--gold); margin-bottom: 16px; }
+#introScreen h3 { font-family: var(--serif); font-weight: 400; font-size: 2.2rem; margin-bottom: 14px; line-height: 1.2; }
+#introScreen p { color: var(--muted); max-width: 460px; margin: 0 auto 30px; }
+
+.progress-wrap { display: flex; align-items: center; gap: 16px; margin-bottom: 34px; }
+.progress { flex: 1; height: 3px; background: rgba(255, 255, 255, .08); }
+.progress-bar { height: 100%; width: 0; background: linear-gradient(90deg, var(--gold), var(--gold-light)); transition: width .5s ease; }
+.progress-text { font-size: .7rem; letter-spacing: .2em; text-transform: uppercase; color: var(--gold); white-space: nowrap; }
+
+.question { font-family: var(--serif); font-weight: 400; font-size: clamp(1.7rem, 3.5vw, 2.4rem); line-height: 1.25; margin-bottom: 28px; }
+.options { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.option {
+  display: flex; align-items: center; gap: 14px; text-align: left;
+  padding: 18px 20px; background: transparent; color: var(--cream);
+  border: 1px solid var(--line); font-size: .92rem; font-weight: 300; transition: .3s;
+}
+.option .emoji { font-size: 1.5rem; }
+.option:hover { border-color: var(--gold); background: rgba(201, 169, 110, .08); transform: translateX(4px); }
+.option.selected { border-color: var(--gold); background: rgba(201, 169, 110, .16); }
+.back-btn { margin-top: 24px; background: none; border: 0; color: var(--muted); font-size: .75rem; letter-spacing: .15em; text-transform: uppercase; }
+.back-btn:hover { color: var(--gold); }
+.back-btn[hidden] { display: none; }
+
+/* Result */
+#resultScreen { text-align: center; }
+.result-main { display: grid; grid-template-columns: 240px 1fr; gap: 36px; align-items: center; text-align: left; margin: 10px 0 36px; }
+.result-bottle svg { width: 100%; height: auto; filter: drop-shadow(0 20px 26px rgba(0, 0, 0, .6)); animation: float 6s ease-in-out infinite; }
+.match-badge {
+  display: inline-block; padding: 5px 16px; margin-bottom: 12px;
+  border: 1px solid var(--gold); color: var(--gold); font-size: .72rem; letter-spacing: .2em; text-transform: uppercase;
+}
+.result-info h3 { font-family: var(--serif); font-weight: 500; font-size: 2.6rem; line-height: 1.1; }
+.result-info .family { color: var(--gold); letter-spacing: .25em; text-transform: uppercase; font-size: .7rem; margin: 6px 0 14px; }
+.result-info p { color: #cfc6b4; font-size: .93rem; }
+.notes { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0; }
+.notes span { font-size: .72rem; padding: 5px 13px; border: 1px solid var(--line); border-radius: 30px; color: var(--gold-light); }
+.result-info .price { font-family: var(--serif); font-size: 1.6rem; color: var(--gold-light); }
+
+.also { font-family: var(--serif); font-weight: 400; font-size: 1.4rem; margin-bottom: 16px; color: var(--muted); }
+.alt-list { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 34px; }
+.alt { display: flex; align-items: center; gap: 14px; padding: 14px; border: 1px solid var(--line); text-align: left; }
+.alt svg { height: 80px; width: auto; flex-shrink: 0; }
+.alt h5 { font-family: var(--serif); font-size: 1.25rem; font-weight: 500; }
+.alt small { color: var(--gold); letter-spacing: .12em; font-size: .7rem; }
+
+/* ============ FOOTER ============ */
+.footer { text-align: center; padding: 60px 5vw 40px; border-top: 1px solid var(--line); background: var(--bg-2); }
+.footer p { color: var(--muted); font-size: .8rem; letter-spacing: .1em; margin-top: 8px; }
+.footer .credits { color: var(--gold); }
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 980px) {
+  .hero { grid-template-columns: 1fr; text-align: center; padding-top: 110px; }
+  .lead { margin-inline: auto; }
+  .hero-actions, .hero-stats { justify-content: center; }
+  .hero-visual { height: 440px; order: -1; }
+  .hero-bottle.main { width: 220px; }
+  .hero-bottle.side { width: 140px; }
+  .grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 720px) {
+  .menu-btn { display: block; }
+  .nav-links {
+    position: fixed; top: 0; right: -100%; height: 100vh; width: 72%;
+    flex-direction: column; justify-content: center; gap: 2.2rem;
+    background: rgba(11, 10, 9, .97); border-left: 1px solid var(--line);
+    transition: right .45s ease;
+  }
+  .nav-links.open { right: 0; }
+  .menu-btn { z-index: 60; }
+  .section { padding: 70px 5vw; }
+  .grid { grid-template-columns: 1fr; }
+  .steps { grid-template-columns: 1fr; gap: 24px; }
+  .quiz-card { padding: 34px 20px; }
+  .options { grid-template-columns: 1fr; }
+  .result-main { grid-template-columns: 1fr; text-align: center; }
+  .result-bottle { max-width: 190px; margin: 0 auto; }
+  .notes { justify-content: center; }
+  .alt-list { grid-template-columns: 1fr; }
+  .hero-stats { gap: 1.5rem; }
+  .hero-visual { height: 360px; }
+  .hero-bottle.main { width: 180px; }
+  .hero-bottle.side { width: 110px; }
+  .progress-text { font-size: .62rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+  .reveal { opacity: 1; transform: none; }
+}
+
+</style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="nav" id="nav">
+    <a href="#home" class="logo">MAISON <span>ÉLARA</span></a>
+    <button class="menu-btn" id="menuBtn" aria-label="Menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="nav-links" id="navLinks">
+      <a href="#collection">Collection</a>
+      <a href="#how">How it works</a>
+      <a href="#quiz" class="nav-cta">Take the Quiz</a>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <div class="hero-glow"></div>
+    <div class="hero-text">
+      <p class="eyebrow">Fine Fragrance · Since 2026</p>
+      <h1>Find the scent that is <em>unmistakably</em> you.</h1>
+      <p class="lead">Answer five simple questions. Our scent-matching engine will curate the perfume that fits your mood, your style and your story.</p>
+      <div class="hero-actions">
+        <a href="#quiz" class="btn btn-gold">Discover My Scent</a>
+        <a href="#collection" class="btn btn-ghost">View Collection</a>
+      </div>
+      <ul class="hero-stats">
+        <li><strong>6</strong><span>Signature Perfumes</span></li>
+        <li><strong>5</strong><span>Quiz Questions</span></li>
+        <li><strong>2 min</strong><span>To Your Match</span></li>
+      </ul>
+    </div>
+    <div class="hero-visual" aria-hidden="true">
+      <div class="hero-bottle main" id="heroBottle"></div>
+      <div class="hero-bottle side left" id="heroBottleL"></div>
+      <div class="hero-bottle side right" id="heroBottleR"></div>
+      <div class="pedestal"></div>
+    </div>
+  </section>
+
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span>Floral</span><span>✦</span><span>Woody</span><span>✦</span><span>Fresh</span><span>✦</span><span>Oriental</span><span>✦</span><span>Gourmand</span><span>✦</span>
+      <span>Floral</span><span>✦</span><span>Woody</span><span>✦</span><span>Fresh</span><span>✦</span><span>Oriental</span><span>✦</span><span>Gourmand</span><span>✦</span>
+    </div>
+  </div>
+
+  <!-- COLLECTION -->
+  <section class="section" id="collection">
+    <div class="section-head reveal">
+      <p class="eyebrow">The Collection</p>
+      <h2>Six signatures. One is yours.</h2>
+    </div>
+    <div class="grid" id="productGrid"></div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section how" id="how">
+    <div class="section-head reveal">
+      <p class="eyebrow">How It Works</p>
+      <h2>Your scent, in three steps</h2>
+    </div>
+    <div class="steps">
+      <div class="step reveal"><span class="num">01</span><h3>Answer</h3><p>Tell us about your weekends, seasons and personality in 5 quick questions.</p></div>
+      <div class="step reveal"><span class="num">02</span><h3>Match</h3><p>Every answer builds your scent profile across five fragrance families.</p></div>
+      <div class="step reveal"><span class="num">03</span><h3>Discover</h3><p>We compare your profile with each perfume and reveal your best match.</p></div>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section class="section quiz-section" id="quiz">
+    <div class="section-head reveal">
+      <p class="eyebrow">The Scent Quiz</p>
+      <h2>Let's find your perfect fragrance</h2>
+    </div>
+
+    <div class="quiz-card" id="quizCard">
+      <!-- Intro -->
+      <div class="quiz-screen active" id="introScreen">
+        <div class="intro-icon">✦</div>
+        <h3>Ready to meet your signature scent?</h3>
+        <p>It takes less than two minutes. There are no wrong answers, just choose what feels most like you.</p>
+        <button class="btn btn-gold" id="startBtn">Begin the Quiz</button>
+      </div>
+
+      <!-- Questions -->
+      <div class="quiz-screen" id="questionScreen">
+        <div class="progress-wrap">
+          <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+          <span class="progress-text" id="progressText">Question 1 of 5</span>
+        </div>
+        <h3 class="question" id="questionText"></h3>
+        <div class="options" id="options"></div>
+        <button class="back-btn" id="backBtn">← Previous</button>
+      </div>
+
+      <!-- Result -->
+      <div class="quiz-screen" id="resultScreen">
+        <p class="eyebrow">Your Perfect Match</p>
+        <div class="result-main">
+          <div class="result-bottle" id="resultBottle"></div>
+          <div class="result-info">
+            <div class="match-badge" id="matchBadge"></div>
+            <h3 id="resultName"></h3>
+            <p class="family" id="resultFamily"></p>
+            <p id="resultDesc"></p>
+            <div class="notes" id="resultNotes"></div>
+            <p class="price" id="resultPrice"></p>
+          </div>
+        </div>
+        <h4 class="also">You may also love</h4>
+        <div class="alt-list" id="altList"></div>
+        <button class="btn btn-ghost" id="retakeBtn">Retake the Quiz</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="logo">MAISON <span>ÉLARA</span></div>
+    <p>Crafted for SCE326 · CA1 Assignment</p>
+    <p class="credits">Aman Kumar (12611832) &nbsp;·&nbsp; Alok Kumar (12611812)</p>
+  </footer>
+
+  <script>
+/* =====================================================
+   MAISON ÉLARA – Perfume Quiz
+   JavaScript handles: data, bottle drawing, quiz logic,
+   recommendation engine, navbar and scroll animations
+   ===================================================== */
+
+/* ---------- 1. PERFUME DATA ----------
+   "profile" = how strongly each perfume belongs to the
+   five scent families (0 to 5). Used for matching. */
+const perfumes = [
+  {
+    id: 'rose', name: 'Velvet Rose', family: 'Floral', shape: 0,
+    notes: ['Bulgarian Rose', 'Jasmine', 'Peony', 'White Musk'],
+    desc: 'A romantic bouquet of fresh-cut roses wrapped in soft musk. Elegant, graceful and made for unforgettable evenings.',
+    price: 4999, c1: '#f4a6b8', c2: '#a8325a',
+    profile: { floral: 5, woody: 0, fresh: 1, oriental: 1, gourmand: 1 }
+  },
+  {
+    id: 'santal', name: 'Santal Royale', family: 'Woody', shape: 3,
+    notes: ['Sandalwood', 'Cedar', 'Vetiver', 'Leather'],
+    desc: 'Warm, calm and confident. Creamy sandalwood meets smoky cedar for a quiet kind of luxury that lasts all day.',
+    price: 5499, c1: '#d9a35b', c2: '#6b3f1d',
+    profile: { floral: 0, woody: 5, fresh: 1, oriental: 2, gourmand: 0 }
+  },
+  {
+    id: 'azure', name: 'Azure Mist', family: 'Fresh', shape: 2,
+    notes: ['Bergamot', 'Sea Salt', 'Mint', 'Green Tea'],
+    desc: 'Like sea breeze on a summer morning. Crisp citrus and cool mint keep you light, energetic and ready for the day.',
+    price: 3999, c1: '#8fe0ee', c2: '#1d6fa5',
+    profile: { floral: 1, woody: 1, fresh: 5, oriental: 0, gourmand: 0 }
+  },
+  {
+    id: 'noir', name: 'Aurelia Noir', family: 'Oriental', shape: 0,
+    notes: ['Oud', 'Amber', 'Saffron', 'Black Vanilla'],
+    desc: 'Deep, mysterious and magnetic. Rich oud and golden amber create a bold signature for those who love to be noticed.',
+    price: 6999, c1: '#8a5a8f', c2: '#1b0f26',
+    profile: { floral: 1, woody: 2, fresh: 0, oriental: 5, gourmand: 2 }
+  },
+  {
+    id: 'honey', name: 'Honey Éclat', family: 'Gourmand', shape: 1,
+    notes: ['Honey', 'Caramel', 'Tonka Bean', 'Vanilla'],
+    desc: 'Sweet, cozy and irresistible. A dessert-like blend of honey and vanilla that feels like a warm hug.',
+    price: 4499, c1: '#ffd37a', c2: '#c4721f',
+    profile: { floral: 1, woody: 0, fresh: 1, oriental: 2, gourmand: 5 }
+  },
+  {
+    id: 'lune', name: 'Lune Blanche', family: 'Floral · Fresh', shape: 1,
+    notes: ['Lily', 'Pear', 'Iris', 'Soft Cedar'],
+    desc: 'Moonlit and serene. Airy lily and juicy pear with a whisper of cedar, perfect for everyday elegance.',
+    price: 4299, c1: '#e9e4ff', c2: '#7d78c9',
+    profile: { floral: 3, woody: 2, fresh: 3, oriental: 0, gourmand: 0 }
+  }
+];
+
+/* ---------- 2. QUIZ QUESTIONS ----------
+   Each option adds points ("w") to scent families. */
+const questions = [
+  {
+    q: 'How does your perfect weekend look?',
+    options: [
+      { e: '🏖️', t: 'Beach or a road trip', w: { fresh: 3, woody: 1 } },
+      { e: '☕', t: 'Café, books and coffee', w: { gourmand: 3, woody: 1 } },
+      { e: '🌹', t: 'A candle-lit dinner date', w: { floral: 2, oriental: 2 } },
+      { e: '🎉', t: 'Party with friends', w: { oriental: 3, gourmand: 1 } }
+    ]
+  },
+  {
+    q: 'When will you wear this perfume most?',
+    options: [
+      { e: '🎓', t: 'Daily: college or office', w: { fresh: 2, floral: 1, woody: 1 } },
+      { e: '🌙', t: 'Date nights', w: { oriental: 3, floral: 1 } },
+      { e: '🪩', t: 'Parties and night outs', w: { oriental: 2, gourmand: 2 } },
+      { e: '💍', t: 'Weddings and special events', w: { floral: 3, woody: 1 } }
+    ]
+  },
+  {
+    q: 'Which season do you love the most?',
+    options: [
+      { e: '☀️', t: 'Summer', w: { fresh: 3 } },
+      { e: '🌧️', t: 'Monsoon', w: { woody: 2, floral: 1 } },
+      { e: '❄️', t: 'Winter', w: { oriental: 2, gourmand: 2 } },
+      { e: '🌸', t: 'Spring', w: { floral: 3, fresh: 1 } }
+    ]
+  },
+  {
+    q: 'Pick the word that describes you best.',
+    options: [
+      { e: '🔥', t: 'Bold and confident', w: { oriental: 3, woody: 1 } },
+      { e: '🍃', t: 'Calm and grounded', w: { woody: 2, fresh: 1, floral: 1 } },
+      { e: '💖', t: 'Romantic and dreamy', w: { floral: 3, gourmand: 1 } },
+      { e: '🍯', t: 'Fun and sweet', w: { gourmand: 3, fresh: 1 } }
+    ]
+  },
+  {
+    q: 'Which smell makes you happiest?',
+    options: [
+      { e: '🍋', t: 'Citrus and mint', w: { fresh: 3 } },
+      { e: '🌺', t: 'Rose and jasmine', w: { floral: 3 } },
+      { e: '🪵', t: 'Sandalwood and cedar', w: { woody: 3 } },
+      { e: '🍦', t: 'Vanilla and caramel', w: { gourmand: 3 } },
+      { e: '🕌', t: 'Oud and amber', w: { oriental: 3 } }
+    ]
+  }
+];
+
+const FAMILIES = ['floral', 'woody', 'fresh', 'oriental', 'gourmand'];
+
+/* ---------- 3. BOTTLE DRAWING (SVG) ----------
+   Bottles are drawn with code, so no image files are needed
+   and they stay sharp at every screen size. */
+function bottleSVG(p, uid) {
+  const g = `g${uid}`, cap = `c${uid}`, shine = `s${uid}`;
+  const defs = `
+    <defs>
+      <linearGradient id="${g}" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="${p.c1}"/><stop offset="1" stop-color="${p.c2}"/>
+      </linearGradient>
+      <linearGradient id="${cap}" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#8d6a2f"/><stop offset=".45" stop-color="#f1dca4"/><stop offset="1" stop-color="#9c7637"/>
+      </linearGradient>
+      <linearGradient id="${shine}" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
+      </linearGradient>
+    </defs>`;
+
+  let body = '', neck = '', capShape = '', label = '';
+  const glass = 'stroke="rgba(255,255,255,.35)" stroke-width="1.5"';
+
+  if (p.shape === 0) {            // classic rectangle
+    body = `<rect x="45" y="115" width="110" height="160" rx="14" fill="url(#${g})" ${glass}/>
+            <rect x="55" y="125" width="14" height="140" rx="7" fill="url(#${shine})"/>`;
+    neck = `<rect x="86" y="92" width="28" height="26" fill="#d9c9a3"/>`;
+    capShape = `<rect x="76" y="42" width="48" height="54" rx="6" fill="url(#${cap})"/>`;
+    label = [100, 205, 44];
+  } else if (p.shape === 1) {     // round
+    body = `<circle cx="100" cy="195" r="78" fill="url(#${g})" ${glass}/>
+            <ellipse cx="68" cy="165" rx="12" ry="34" fill="url(#${shine})" transform="rotate(20 68 165)"/>`;
+    neck = `<rect x="88" y="98" width="24" height="24" fill="#d9c9a3"/>`;
+    capShape = `<circle cx="100" cy="68" r="30" fill="url(#${cap})"/>`;
+    label = [100, 200, 46];
+  } else if (p.shape === 2) {     // tall slim
+    body = `<rect x="62" y="100" width="76" height="180" rx="10" fill="url(#${g})" ${glass}/>
+            <rect x="70" y="110" width="10" height="160" rx="5" fill="url(#${shine})"/>`;
+    neck = `<rect x="88" y="80" width="24" height="24" fill="#d9c9a3"/>`;
+    capShape = `<rect x="82" y="22" width="36" height="62" rx="4" fill="url(#${cap})"/>`;
+    label = [100, 205, 32];
+  } else {                        // faceted hexagon
+    body = `<polygon points="100,108 168,140 168,235 100,280 32,235 32,140" fill="url(#${g})" ${glass}/>
+            <polygon points="100,108 100,280 32,235 32,140" fill="rgba(255,255,255,.12)"/>`;
+    neck = `<rect x="86" y="88" width="28" height="24" fill="#d9c9a3"/>`;
+    capShape = `<polygon points="100,34 126,52 126,92 74,92 74,52" fill="url(#${cap})"/>`;
+    label = [100, 205, 46];
+  }
+
+  const [lx, ly, lw] = label;
+  const labelSVG = `
+    <rect x="${lx - lw / 2}" y="${ly - 18}" width="${lw}" height="36" fill="rgba(11,10,9,.6)" stroke="#c9a96e" stroke-width="1"/>
+    <text x="${lx}" y="${ly - 2}" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="#e8d3a2" letter-spacing="1.5">ÉLARA</text>
+    <text x="${lx}" y="${ly + 10}" text-anchor="middle" font-family="Georgia,serif" font-size="6" fill="#c9a96e" letter-spacing="1">PARIS</text>`;
+
+  return `<svg viewBox="0 0 200 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${p.name} perfume bottle">
+    ${defs}${body}${neck}${capShape}${labelSVG}</svg>`;
+}
+
+/* ---------- 4. RENDER COLLECTION + HERO ---------- */
+const productGrid = document.getElementById('productGrid');
+perfumes.forEach((p, i) => {
+  const card = document.createElement('article');
+  card.className = 'product reveal';
+  card.innerHTML = `
+    <div class="bottle-wrap">${bottleSVG(p, 'p' + i)}</div>
+    <p class="tag">${p.family}</p>
+    <h3>${p.name}</h3>
+    <p class="notes-line">${p.notes.slice(0, 3).join(' · ')}</p>
+    <p class="price">₹${p.price.toLocaleString('en-IN')}</p>`;
+  productGrid.appendChild(card);
+});
+
+document.getElementById('heroBottle').innerHTML = bottleSVG(perfumes[3], 'h1');
+document.getElementById('heroBottleL').innerHTML = bottleSVG(perfumes[0], 'h2');
+document.getElementById('heroBottleR').innerHTML = bottleSVG(perfumes[2], 'h3');
+
+/* ---------- 5. QUIZ LOGIC ---------- */
+const screens = {
+  intro: document.getElementById('introScreen'),
+  question: document.getElementById('questionScreen'),
+  result: document.getElementById('resultScreen')
+};
+const qText = document.getElementById('questionText');
+const optionsBox = document.getElementById('options');
+const progressBar = document.getElementById('progressBar');
+const progressText = document.getElementById('progressText');
+const backBtn = document.getElementById('backBtn');
+
+let current = 0;
+let answers = [];   // stores chosen option index for each question
+
+function showScreen(name) {
+  Object.values(screens).forEach(s => s.classList.remove('active'));
+  screens[name].classList.add('active');
+}
+
+function startQuiz() {
+  current = 0;
+  answers = [];
+  showScreen('question');
+  renderQuestion();
+  document.getElementById('quiz').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function renderQuestion() {
+  const item = questions[current];
+  qText.textContent = item.q;
+  optionsBox.innerHTML = '';
+
+  item.options.forEach((opt, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'option' + (answers[current] === idx ? ' selected' : '');
+    btn.innerHTML = `<span class="emoji">${opt.e}</span><span>${opt.t}</span>`;
+    btn.addEventListener('click', () => chooseOption(idx));
+    optionsBox.appendChild(btn);
+  });
+
+  progressBar.style.width = (current / questions.length) * 100 + '%';
+  progressText.textContent = `Question ${current + 1} of ${questions.length}`;
+  backBtn.hidden = current === 0;
+}
+
+function chooseOption(idx) {
+  answers[current] = idx;
+  // small delay so the user sees their selection
+  [...optionsBox.children].forEach((b, i) => b.classList.toggle('selected', i === idx));
+  setTimeout(() => {
+    if (current < questions.length - 1) {
+      current++;
+      renderQuestion();
+    } else {
+      progressBar.style.width = '100%';
+      showResult();
+    }
+  }, 280);
+}
+
+backBtn.addEventListener('click', () => {
+  if (current > 0) { current--; renderQuestion(); }
+});
+
+/* ---------- 6. RECOMMENDATION ENGINE ----------
+   Step 1: add up points of every chosen answer -> user profile.
+   Step 2: compare the user profile with each perfume profile
+           using cosine similarity (how close two vectors point).
+   Step 3: highest similarity = best match. */
+function buildUserProfile() {
+  const user = { floral: 0, woody: 0, fresh: 0, oriental: 0, gourmand: 0 };
+  answers.forEach((optIdx, qIdx) => {
+    const weights = questions[qIdx].options[optIdx].w;
+    for (const fam in weights) user[fam] += weights[fam];
+  });
+  return user;
+}
+
+function similarity(user, perfume) {
+  let dot = 0, magU = 0, magP = 0;
+  FAMILIES.forEach(f => {
+    dot += user[f] * perfume.profile[f];
+    magU += user[f] ** 2;
+    magP += perfume.profile[f] ** 2;
+  });
+  return dot / (Math.sqrt(magU) * Math.sqrt(magP) || 1);
+}
+
+function rankPerfumes() {
+  const user = buildUserProfile();
+  return perfumes
+    .map(p => ({ p, score: similarity(user, p) }))
+    .sort((a, b) => b.score - a.score);
+}
+
+function showResult() {
+  const ranked = rankPerfumes();
+  const best = ranked[0];
+  const bp = best.p;
+
+  document.getElementById('resultBottle').innerHTML = bottleSVG(bp, 'res');
+  document.getElementById('matchBadge').textContent = Math.round(best.score * 100) + '% match';
+  document.getElementById('resultName').textContent = bp.name;
+  document.getElementById('resultFamily').textContent = bp.family;
+  document.getElementById('resultDesc').textContent = bp.desc;
+  document.getElementById('resultNotes').innerHTML = bp.notes.map(n => `<span>${n}</span>`).join('');
+  document.getElementById('resultPrice').textContent = '₹' + bp.price.toLocaleString('en-IN');
+
+  document.getElementById('altList').innerHTML = ranked.slice(1, 3).map((r, i) => `
+    <div class="alt">
+      ${bottleSVG(r.p, 'alt' + i)}
+      <div><h5>${r.p.name}</h5><small>${r.p.family.toUpperCase()} · ${Math.round(r.score * 100)}% MATCH</small></div>
+    </div>`).join('');
+
+  showScreen('result');
+}
+
+document.getElementById('startBtn').addEventListener('click', startQuiz);
+document.getElementById('retakeBtn').addEventListener('click', startQuiz);
+
+/* ---------- 7. NAVBAR + MOBILE MENU ---------- */
+const nav = document.getElementById('nav');
+const menuBtn = document.getElementById('menuBtn');
+const navLinks = document.getElementById('navLinks');
+
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 40);
+});
+
+menuBtn.addEventListener('click', () => {
+  const open = navLinks.classList.toggle('open');
+  menuBtn.classList.toggle('open', open);
+  menuBtn.setAttribute('aria-expanded', open);
+});
+navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+  navLinks.classList.remove('open');
+  menuBtn.classList.remove('open');
+  menuBtn.setAttribute('aria-expanded', false);
+}));
+
+/* ---------- 8. SCROLL REVEAL ANIMATION ---------- */
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('show');
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+</script>
+</body>
+</html>
